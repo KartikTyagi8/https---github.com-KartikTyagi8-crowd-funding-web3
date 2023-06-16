@@ -101,7 +101,7 @@ export const StateContextProvider = ({ children }) => {
     const parsedCampaings = campaigns.map((campaign, i) => ({
       funder: campaign.funder,
       campaignId: campaign.campaignId,
-      amountFunded:  ethers.utils.formatEther(campaign.amountFunded.toString()),
+      amountFunded: ethers.utils.formatEther(campaign.amountFunded.toString()),
       redeemed: campaign.redeemed,
       targetAmount: ethers.utils.formatEther(campaign.targetAmount.toString()),
       title: campaign.title,
@@ -109,7 +109,9 @@ export const StateContextProvider = ({ children }) => {
       deadline: campaign.deadline.toNumber(),
       image: campaign.image,
       owner: campaign.owner,
-      amountCollected: ethers.utils.formatEther(campaign.amountCollected.toString()),
+      amountCollected: ethers.utils.formatEther(
+        campaign.amountCollected.toString()
+      ),
     }));
     console.log(parsedCampaings);
 
@@ -117,11 +119,20 @@ export const StateContextProvider = ({ children }) => {
   };
 
   const donate = async (pId, amount) => {
-    const data = await contract.call("donateToCampaign", [pId], {
-      value: ethers.utils.parseEther(amount),
-    });
+    try {
+      const data = await contract.call("donateToCampaign", [pId], {
+        value: ethers.utils.parseEther(amount),
+      });
 
-    return data;
+      return data;
+    } catch (error) {
+      // Check if the error message contains the revert reason
+      if (error.message.includes("revert")) {
+        console.log("Transaction reverted. Please donate a lesser amount.");
+      } else {
+        console.log("Error occurred while donating:", error.message);
+      }
+    }
   };
 
   const getDonations = async (pId) => {
