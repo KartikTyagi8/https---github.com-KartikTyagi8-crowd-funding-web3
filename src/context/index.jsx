@@ -13,7 +13,7 @@ const StateContext = createContext();
 
 export const StateContextProvider = ({ children }) => {
   const { contract } = useContract(
-    "0x01Ee31e02C885edD310431A6Ed88AB3B28a18AD2"
+    "0xF4C6596E13d4B165E257428e4CC9296e724088d5"
   );
   console.log(contract);
   const { mutateAsync: createCampaign } = useContractWrite(
@@ -76,6 +76,15 @@ export const StateContextProvider = ({ children }) => {
     return parsedCampaings;
   };
 
+  // const getCertificate = async () => {
+  //   const sharedCetificate = await contract.call("getShareCertificates", [address]);
+  //   const certificates = sharedCetificate.map((certificate) => ({
+  //       campaignId: certificate.campaignId,
+  //       amount: certificate.amount,
+  //   }));
+  //   return certificates;
+  // }
+
   const getUserCampaigns = async () => {
     const allCampaigns = await getCampaigns();
 
@@ -87,22 +96,24 @@ export const StateContextProvider = ({ children }) => {
   };
 
   const fetchFundedCampaigns = async () => {
-      const campaigns = await contract.call("getUserFundedCampaigns",[address]);
+    const campaigns = await contract.call("getUserFundedCampaigns", [address]);
 
-      const parsedCampaings = campaigns.map((campaign, i) => ({
-        owner: campaign.owner,
-        title: campaign.title,
-        description: campaign.description,
-        target: ethers.utils.formatEther(campaign.target.toString()),
-        deadline: campaign.deadline.toNumber(),
-        amountCollected: ethers.utils.formatEther(
-          campaign.amountCollected.toString()
-        ),
-        image: campaign.image,
-        pId: i,
-      }));
-  
-      return parsedCampaings;
+    const parsedCampaings = campaigns.map((campaign, i) => ({
+      funder: campaign.funder,
+      campaignId: campaign.campaignId,
+      amountFunded:  ethers.utils.formatEther(campaign.amountFunded.toString()),
+      redeemed: campaign.redeemed,
+      targetAmount: ethers.utils.formatEther(campaign.targetAmount.toString()),
+      title: campaign.title,
+      description: campaign.description,
+      deadline: campaign.deadline.toNumber(),
+      image: campaign.image,
+      owner: campaign.owner,
+      amountCollected: ethers.utils.formatEther(campaign.amountCollected.toString()),
+    }));
+    console.log(parsedCampaings);
+
+    return parsedCampaings;
   };
 
   const donate = async (pId, amount) => {
@@ -129,7 +140,11 @@ export const StateContextProvider = ({ children }) => {
     return parsedDonations;
   };
   const logout = async () => {
-    if (connect && connect.currentProvider && typeof connect.currentProvider.disconnect === 'function') {
+    if (
+      connect &&
+      connect.currentProvider &&
+      typeof connect.currentProvider.disconnect === "function"
+    ) {
       console.log("tyagi");
       await connect.currentProvider.disconnect();
     }

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 
-import { DisplayCampaigns } from "../components";
+import { DisplayFundedCampaigns } from "../components";
 import { useStateContext } from "../context";
 
 const Funded = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [userFundedCampaigns, setUserFundedCampaigns] = useState([]);
 
-  const { address, contract, getUserCampaigns, fetchFundedCampaigns } =
+  const { address, contract, fetchFundedCampaigns } =
     useStateContext();
 
   const fetchUserFundedCampaigns = async () => {
@@ -24,8 +24,8 @@ const Funded = () => {
     }
   }, [address, contract]);
   return (
-    <DisplayCampaigns
-      title="My funded Campaigns"
+    <DisplayFundedCampaigns
+      title="My Funded Campaigns"
       isLoading={isLoading}
       campaigns={userFundedCampaigns}
       message="You have not yet donated to any campaign"
