@@ -1,5 +1,5 @@
 import React, { useContext, createContext } from "react";
-
+import toast from "react-hot-toast"
 import {
   useAddress,
   useContract,
@@ -13,9 +13,8 @@ const StateContext = createContext();
 
 export const StateContextProvider = ({ children }) => {
   const { contract } = useContract(
-    "0x5EB2b726F43b17065AB810003E759fB44D5dB14a"
+    "0x541dAC6f3Ad5a516a54CC415871ec47830dBD810"
   );
-  console.log(contract);
   const { mutateAsync: createCampaign } = useContractWrite(
     contract,
     "createCampaign"
@@ -26,15 +25,6 @@ export const StateContextProvider = ({ children }) => {
 
   const publishCampaign = async (form) => {
     const { title, description, target, deadline, image } = form;
-    console.log(
-      address, // owner
-      title, // title
-      description, // description
-      target,
-      new Date(deadline).getTime(), // deadline,
-      image,
-      "creating campaign final call"
-    );
     try {
       if (title && description && target && deadline && image) {
         const data = await createCampaign({
@@ -113,7 +103,6 @@ export const StateContextProvider = ({ children }) => {
         campaign.amountCollected.toString()
       ),
     }));
-    console.log(parsedCampaings);
 
     return parsedCampaings;
   };
@@ -127,11 +116,7 @@ export const StateContextProvider = ({ children }) => {
       return data;
     } catch (error) {
       // Check if the error message contains the revert reason
-      if (error.message.includes("revert")) {
-        console.log("Transaction reverted. Please donate a lesser amount.");
-      } else {
-        console.log("Error occurred while donating:", error.message);
-      }
+      toast.error("Transaction reverted. Please donate a lesser amount.");
     }
   };
 
@@ -156,7 +141,6 @@ export const StateContextProvider = ({ children }) => {
       connect.currentProvider &&
       typeof connect.currentProvider.disconnect === "function"
     ) {
-      console.log("tyagi");
       await connect.currentProvider.disconnect();
     }
   };

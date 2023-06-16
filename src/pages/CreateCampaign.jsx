@@ -28,14 +28,7 @@ const CreateCampaign = () => {
     e.preventDefault();
 
     checkIfImage(form.image, async (exists) => {
-      console.log(
-        form.title, // title
-        form.description, // description
-        form.target,
-        new Date(form.deadline).getTime(), // deadline,
-        form.image,
-        "creating campaign call"
-      );
+      
       if (exists) {
         setIsLoading(true);
         await createCampaign(form);

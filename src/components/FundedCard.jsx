@@ -66,7 +66,7 @@ const FundedCard = ({
     doc.text(footerText, footerX, footerY, { align: "center" });
 
     // Save the PDF
-    doc.save("Thanking_Certificate.pdf");
+    doc.save(`Thanking_Certificate_${title}.pdf`);
   };
 
   return (

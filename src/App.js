@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { Toaster } from "react-hot-toast";
 
 import { Sidebar, Navbar } from './components';
 import { CampaignDetails, CreateCampaign, Home, Profile } from './pages';
@@ -22,6 +23,7 @@ const App = () => {
           <Route path="/campaign-details/:id" element={<CampaignDetails />} />
           <Route path="/funded" element={<Funded />} />
         </Routes>
+        <Toaster />
       </div>
     </div>
   )

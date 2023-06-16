@@ -14,7 +14,6 @@ const Funded = () => {
     setIsLoading(true);
     const data = await fetchFundedCampaigns();
     setUserFundedCampaigns(data);
-    console.log(userFundedCampaigns);
     setIsLoading(false);
   };
 
